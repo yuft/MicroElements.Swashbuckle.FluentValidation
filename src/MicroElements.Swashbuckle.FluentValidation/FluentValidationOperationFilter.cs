@@ -74,9 +74,8 @@ namespace MicroElements.Swashbuckle.FluentValidation
                     if (validator == null)
                         continue;
 
-                    var descriptor = validator.CreateDescriptor();
                     var key = modelMetadata.PropertyName;
-                    var validatorsForMember = descriptor.GetValidatorsForMemberIgnoreCase(key).NotNull();
+                    var validatorsForMember = validator.GetValidatorsForMemberIgnoreCase(key);
 
                     OpenApiSchema schema = null;
                     foreach (var propertyValidator in validatorsForMember)
@@ -87,10 +86,13 @@ namespace MicroElements.Swashbuckle.FluentValidation
                             {
                                 try
                                 {
-                                    if (!context.SchemaRegistry.Schemas.TryGetValue(parameterType.Name, out schema))
-                                        schema = context.SchemaRegistry.GetOrRegister(parameterType);
+                                    if (!context.SchemaRepository.Schemas.TryGetValue(parameterType.Name, out schema))
+                                    {
+                                        schema = context.SchemaGenerator.GenerateSchema(parameterType, context.SchemaRepository);
+                                        context.SchemaRepository.AddSchemaFor(parameterType, schema);
+                                    }
 
-                                    rule.Apply(new RuleContext(schema, new SchemaFilterContext(parameterType, null, context.SchemaRegistry), key.ToLowerCamelCase(), propertyValidator));
+                                    rule.Apply(new RuleContext(schema, new SchemaFilterContext(parameterType, null, context.SchemaRepository, context.SchemaGenerator), key.ToLowerCamelCase(), propertyValidator));
                                 }
                                 catch (Exception e)
                                 {
@@ -105,6 +107,7 @@ namespace MicroElements.Swashbuckle.FluentValidation
 
                     if (schema?.Properties != null)
                     {
+                        throw new NotImplementedException("PartialSchema");
                         //todo:v5
                         //if (operationParameter is PartialSchema partialSchema)
                         //{

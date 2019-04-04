@@ -1,10 +1,15 @@
 # Changes in 3.0.0-alpha.1:
 * Swashbuckle.AspNetCore updated to version >= 5.0.0-beta
-
-# Changes in 2.0.0-beta.1:
-* Swashbuckle.AspNetCore updated to version >= 4.0.0
-* Schema Minimum and Maximum now supports doubles (was only int)
+# Changes in 2.0.0:
+* Swashbuckle.AspNetCore updated and restricted to version [4.0.0, 5.0.0)
+* Breaking Changes: FluentValidation updated to 8.1.3 to support when/unless (PR#27)
+* Changes: Running through included validators recursively to add the entire tree (PR#29)
+* Changes: Numeric types includes decimal
+* Changes: Schema Minimum and Maximum now supports doubles (was only int)
 * WARNING: ScopedSwaggerMiddleware doesn't work as expected because Swashbuckle.AspNetCore changed a lot. Looking for workaround.
+
+# Changes in 1.2.0:
+* Added: Numeric types includes decimal
 
 # Changes in 1.1.0:
 * Swashbuckle.AspNetCore version locked to versions [1.1.0-3.0.0] because version 4.0.0 has breaking changes. Next version will be 2.0.0 according semver.
